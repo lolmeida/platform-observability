@@ -89,6 +89,8 @@ public class RequestCorrelationFilter implements ContainerRequestFilter, Contain
 
   public static String normalizePath(String path) {
     if (path == null || path.isBlank()) return "/";
+    int query = path.indexOf('?');
+    if (query >= 0) path = path.substring(0, query);
     String[] segments = path.split("/", -1);
     StringBuilder result = new StringBuilder();
     for (int i = 0; i < segments.length; i++) {

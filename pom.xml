@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.lolmeida.platform</groupId>
   <artifactId>platform-observability</artifactId>
-  <version>0.1.2</version>
+  <version>0.1.3</version>
   <packaging>pom</packaging>
   <name>Platform Observability</name>
   <description>Versioned observability contract and Quarkus adapter for PEAH services</description>
