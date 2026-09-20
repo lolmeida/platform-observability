@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/lolmeida/platform-observability/schema/log-event-v1.schema.json",
+  "title": "Platform observability log event v1",
+  "type": "object",
+  "required": ["timestamp", "level", "service", "environment", "version", "logger", "event", "message"],
+  "properties": {
+    "timestamp": {"type": "string", "format": "date-time"},
+    "level": {"type": "string", "enum": ["TRACE", "DEBUG", "INFO", "WARN", "ERROR"]},
+    "service": {"type": "string", "minLength": 1}, "environment": {"type": "string", "minLength": 1}, "version": {"type": "string", "minLength": 1},
+    "logger": {"type": "string", "minLength": 1}, "event": {"type": "string", "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)*$"}, "message": {"type": "string"},
+    "requestId": {"type": "string", "pattern": "^[A-Za-z0-9._:-]{1,128}$"}, "traceId": {"type": "string"}, "spanId": {"type": "string"},
+    "httpMethod": {"type": "string"}, "httpPath": {"type": "string", "pattern": "^/"}, "httpStatus": {"type": "integer", "minimum": 100, "maximum": 599}, "durationMs": {"type": "integer", "minimum": 0},
+    "outcome": {"type": "string", "enum": ["success", "failure", "rejected", "cached", "stale"]}, "errorCategory": {"type": "string", "enum": ["timeout", "upstream_4xx", "upstream_5xx", "authentication", "authorization", "validation", "conflict", "unexpected"]}
+  },
+  "additionalProperties": true
+}

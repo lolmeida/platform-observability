@@ -1,0 +1,1 @@
+{"timestamp":"2026-09-20T12:00:01Z","level":"WARN","service":"example-api","environment":"prod","version":"sha-abc123","logger":"com.example.Api","event":"http.request.failed","message":"HTTP request failed","requestId":"req-43","httpMethod":"GET","httpPath":"/api/v1/services/{id}","httpStatus":504,"durationMs":1004,"outcome":"failure","errorCategory":"timeout"}
