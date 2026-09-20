@@ -1,33 +1,54 @@
 package com.lolmeida.platform.observability;
 
-import io.smallrye.config.ConfigMapping;
-import io.smallrye.config.WithDefault;
+import jakarta.enterprise.context.ApplicationScoped;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
-@ConfigMapping(prefix = "peah.observability")
-public interface ObservabilityConfig {
-  @WithDefault("true")
-  boolean enabled();
+/** Consumer configuration for generic observability behavior. */
+@ApplicationScoped
+public class ObservabilityConfig {
+  @ConfigProperty(name = "peah.observability.enabled", defaultValue = "true")
+  boolean enabled;
 
-  @WithDefault("unknown-service")
-  String service();
+  @ConfigProperty(name = "peah.observability.service", defaultValue = "unknown-service")
+  String service;
 
-  @WithDefault("local")
-  String environment();
+  @ConfigProperty(name = "peah.observability.environment", defaultValue = "local")
+  String environment;
 
-  @WithDefault("unknown")
-  String version();
+  @ConfigProperty(name = "peah.observability.version", defaultValue = "unknown")
+  String version;
 
-  Http http();
+  @ConfigProperty(name = "peah.observability.http.slow-threshold-ms", defaultValue = "1000")
+  long slowThresholdMs;
 
-  RequestId requestId();
+  @ConfigProperty(name = "peah.observability.request-id.header", defaultValue = "X-Request-ID")
+  String requestIdHeader;
 
-  interface Http {
-    @WithDefault("1000")
-    long slowThresholdMs();
+  public boolean enabled() {
+    return enabled;
   }
 
-  interface RequestId {
-    @WithDefault("X-Request-ID")
-    String header();
+  public String service() {
+    return service;
   }
+
+  public String environment() {
+    return environment;
+  }
+
+  public String version() {
+    return version;
+  }
+
+  public Http http() {
+    return new Http(slowThresholdMs);
+  }
+
+  public RequestId requestId() {
+    return new RequestId(requestIdHeader);
+  }
+
+  public record Http(long slowThresholdMs) {}
+
+  public record RequestId(String header) {}
 }
