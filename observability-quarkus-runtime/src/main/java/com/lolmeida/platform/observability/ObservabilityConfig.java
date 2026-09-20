@@ -6,7 +6,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 /** Consumer configuration for generic observability behavior. */
 @ApplicationScoped
 public class ObservabilityConfig {
-  @ConfigProperty(name = "peah.observability.enabled", defaultValue = "true")
+  @ConfigProperty(name = "peah.observability.enabled", defaultValue = "false")
   boolean enabled;
 
   @ConfigProperty(name = "peah.observability.service", defaultValue = "unknown-service")

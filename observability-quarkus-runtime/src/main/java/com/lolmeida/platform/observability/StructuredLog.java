@@ -1,6 +1,5 @@
 package com.lolmeida.platform.observability;
 
-import io.opentelemetry.api.trace.Span;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -52,11 +51,8 @@ public final class StructuredLog {
     put(previous, created, "event", event);
     put(previous, created, "message", message);
     put(previous, created, "logger", logger.getName());
-    Span span = Span.current();
-    if (span.getSpanContext().isValid()) {
-      put(previous, created, "traceId", span.getSpanContext().getTraceId());
-      put(previous, created, "spanId", span.getSpanContext().getSpanId());
-    }
+    TraceContext.traceId().ifPresent(id -> put(previous, created, "traceId", id));
+    TraceContext.spanId().ifPresent(id -> put(previous, created, "spanId", id));
     if (fields != null)
       fields.forEach(
           (key, fieldValue) -> {

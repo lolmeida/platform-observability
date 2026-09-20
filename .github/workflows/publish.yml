@@ -1,6 +1,5 @@
 name: Publish release
 on:
-  workflow_dispatch:
   release:
     types: [published]
 permissions:
@@ -8,10 +7,11 @@ permissions:
   packages: write
 jobs:
   publish:
-    if: ${{ github.event_name == 'workflow_dispatch' || startsWith(github.event.release.tag_name, 'v') }}
+    if: startsWith(github.event.release.tag_name, 'v')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with: {ref: '${{ github.event.release.tag_name }}'}
       - uses: actions/setup-java@v4
         with: {distribution: temurin, java-version: '21', server-id: github, settings-path: '${{ github.workspace }}'}
       - name: Configure Maven repository
