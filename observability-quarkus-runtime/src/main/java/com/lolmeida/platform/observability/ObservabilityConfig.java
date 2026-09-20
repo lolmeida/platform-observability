@@ -9,7 +9,7 @@ public class ObservabilityConfig {
   @ConfigProperty(name = "peah.observability.enabled", defaultValue = "false")
   boolean enabled;
 
-  @ConfigProperty(name = "peah.observability.service", defaultValue = "unknown-service")
+  @ConfigProperty(name = "peah.observability.service", defaultValue = "")
   String service;
 
   @ConfigProperty(name = "peah.observability.environment", defaultValue = "local")

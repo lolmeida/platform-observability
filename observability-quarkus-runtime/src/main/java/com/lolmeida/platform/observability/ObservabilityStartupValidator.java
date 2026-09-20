@@ -13,10 +13,8 @@ public class ObservabilityStartupValidator {
   }
 
   void validate(@Observes StartupEvent ignored) {
-    if (config.enabled()
-        && "prod".equalsIgnoreCase(config.environment())
-        && (config.service().isBlank() || "unknown-service".equals(config.service()))) {
-      throw new IllegalStateException("peah.observability.service is required in production");
+    if (config.enabled() && config.service().isBlank()) {
+      throw new IllegalStateException("peah.observability.service is required when enabled");
     }
   }
 }
