@@ -9,14 +9,16 @@ public final class TraceContext {
   private TraceContext() {}
 
   public static Optional<String> traceId() {
-    SpanContext context = Span.current().getSpanContext();
-    if (!context.isValid()) return Optional.empty();
-    return Optional.of(context.getTraceId());
+    return currentSpanContext().map(SpanContext::getTraceId);
   }
 
   public static Optional<String> spanId() {
+    return currentSpanContext().map(SpanContext::getSpanId);
+  }
+
+  private static Optional<SpanContext> currentSpanContext() {
     SpanContext context = Span.current().getSpanContext();
     if (!context.isValid()) return Optional.empty();
-    return Optional.of(context.getSpanId());
+    return Optional.of(context);
   }
 }
