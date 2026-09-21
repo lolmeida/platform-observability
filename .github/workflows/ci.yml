@@ -17,7 +17,7 @@ jobs:
           distribution: temurin
           java-version: '21'
           cache: maven
-      - run: ./mvnw -B -ntp clean test spotless:check package -DskipTests=false
+      - run: ./mvnw -B -ntp clean install spotless:check -DskipTests=false
   diff-check:
     runs-on: ubuntu-latest
     steps:

@@ -9,6 +9,8 @@ import io.quarkus.builder.item.SimpleBuildItem;
 import io.quarkus.deployment.annotations.BuildProducer;
 import io.quarkus.deployment.annotations.BuildStep;
 import io.quarkus.deployment.builditem.FeatureBuildItem;
+import io.quarkus.resteasy.reactive.spi.ContainerRequestFilterBuildItem;
+import io.quarkus.resteasy.reactive.spi.ContainerResponseFilterBuildItem;
 import org.eclipse.microprofile.config.Config;
 import org.eclipse.microprofile.config.ConfigProvider;
 
@@ -35,6 +37,20 @@ public class ObservabilityProcessor {
   }
 
   static final class ValidationBuildItem extends SimpleBuildItem {}
+
+  @BuildStep
+  void registerRequestFilter(BuildProducer<ContainerRequestFilterBuildItem> filters) {
+    filters.produce(
+        new ContainerRequestFilterBuildItem.Builder(RequestCorrelationFilter.class.getName())
+            .build());
+  }
+
+  @BuildStep
+  void registerResponseFilter(BuildProducer<ContainerResponseFilterBuildItem> filters) {
+    filters.produce(
+        new ContainerResponseFilterBuildItem.Builder(RequestCorrelationFilter.class.getName())
+            .build());
+  }
 
   @BuildStep
   void registerBeans(BuildProducer<AdditionalBeanBuildItem> beans) {
