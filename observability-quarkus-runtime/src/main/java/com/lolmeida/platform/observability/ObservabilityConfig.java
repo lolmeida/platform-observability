@@ -1,6 +1,7 @@
 package com.lolmeida.platform.observability;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import java.util.Optional;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 /** Consumer configuration for generic observability behavior. */
@@ -10,7 +11,7 @@ public class ObservabilityConfig {
   boolean enabled;
 
   @ConfigProperty(name = "peah.observability.service", defaultValue = "")
-  String service;
+  Optional<String> service;
 
   @ConfigProperty(name = "peah.observability.environment", defaultValue = "local")
   String environment;
@@ -29,7 +30,7 @@ public class ObservabilityConfig {
   }
 
   public String service() {
-    return service;
+    return service.orElse("");
   }
 
   public String environment() {

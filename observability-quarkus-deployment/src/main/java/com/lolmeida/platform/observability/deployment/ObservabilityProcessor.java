@@ -9,10 +9,10 @@ import io.quarkus.builder.item.SimpleBuildItem;
 import io.quarkus.deployment.annotations.BuildProducer;
 import io.quarkus.deployment.annotations.BuildStep;
 import io.quarkus.deployment.builditem.FeatureBuildItem;
+import io.quarkus.deployment.builditem.ConfigurationBuildItem;
 import io.quarkus.resteasy.reactive.spi.ContainerRequestFilterBuildItem;
 import io.quarkus.resteasy.reactive.spi.ContainerResponseFilterBuildItem;
-import org.eclipse.microprofile.config.Config;
-import org.eclipse.microprofile.config.ConfigProvider;
+import io.smallrye.config.ConfigValue;
 
 public class ObservabilityProcessor {
   private static final String FEATURE = "platform-observability";
@@ -23,13 +23,13 @@ public class ObservabilityProcessor {
   }
 
   @BuildStep
-  ValidationBuildItem validateConfiguration() {
-    Config config = ConfigProvider.getConfig();
-    if (config.getOptionalValue("peah.observability.enabled", Boolean.class).orElse(false)
-        && config
-            .getOptionalValue("peah.observability.service", String.class)
-            .orElse("")
-            .isBlank()) {
+  ValidationBuildItem validateConfiguration(ConfigurationBuildItem configuration) {
+    var values = configuration.getReadResult().getRunTimeValues();
+    ConfigValue enabled = values.get("peah.observability.enabled");
+    ConfigValue service = values.get("peah.observability.service");
+    if (enabled != null
+        && Boolean.parseBoolean(enabled.getValue())
+        && (service == null || service.getValue() == null || service.getValue().isBlank())) {
       throw new IllegalStateException(
           "peah.observability.service must be configured when observability is enabled");
     }
