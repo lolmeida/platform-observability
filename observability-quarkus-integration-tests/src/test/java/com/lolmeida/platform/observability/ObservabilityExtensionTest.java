@@ -40,4 +40,14 @@ class ObservabilityExtensionTest {
         .statusCode(200)
         .header("X-Request-ID", matchesPattern("[0-9a-f-]{36}"));
   }
+
+  @Test
+  void correlatesFailedResponse() {
+    given()
+        .when()
+        .get("/probe/failure")
+        .then()
+        .statusCode(500)
+        .header("X-Request-ID", matchesPattern("[0-9a-f-]{36}"));
+  }
 }
