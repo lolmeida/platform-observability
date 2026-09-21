@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/lolmeida/platform-observability/schema/log-event-v1.schema.json",
+  "$id": "https://github.com/lolmeida/platform-quarkus/schema/log-event-v1.schema.json",
   "title": "Platform observability log event v1",
   "type": "object",
   "required": ["timestamp", "level", "service", "environment", "version", "logger", "event", "message"],

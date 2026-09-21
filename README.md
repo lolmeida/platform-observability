@@ -21,7 +21,7 @@ Add only the runtime artifact and configure the GitHub Packages Maven repository
 ```
 
 ```xml
-<repositories><repository><id>github</id><url>https://maven.pkg.github.com/lolmeida/platform-observability</url></repository></repositories>
+<repositories><repository><id>github</id><url>https://maven.pkg.github.com/lolmeida/platform-quarkus</url></repository></repositories>
 ```
 
 Use a read-only `GITHUB_TOKEN` or GitHub App token with `packages: read`; keep credentials in Maven `settings.xml`, never in source. Consumer workflows need `permissions: {contents: read, packages: read}` and must pass the token to Maven authentication.
