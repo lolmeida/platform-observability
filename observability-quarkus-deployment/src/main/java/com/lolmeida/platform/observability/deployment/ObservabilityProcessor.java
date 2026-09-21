@@ -9,7 +9,6 @@ import io.quarkus.builder.item.SimpleBuildItem;
 import io.quarkus.deployment.annotations.BuildProducer;
 import io.quarkus.deployment.annotations.BuildStep;
 import io.quarkus.deployment.builditem.FeatureBuildItem;
-import io.quarkus.deployment.builditem.nativeimage.ReflectiveClassBuildItem;
 import org.eclipse.microprofile.config.Config;
 import org.eclipse.microprofile.config.ConfigProvider;
 
@@ -36,16 +35,6 @@ public class ObservabilityProcessor {
   }
 
   static final class ValidationBuildItem extends SimpleBuildItem {}
-
-  @BuildStep
-  void registerTraceContextReflection(BuildProducer<ReflectiveClassBuildItem> reflection) {
-    reflection.produce(
-        ReflectiveClassBuildItem.builder(
-                "io.opentelemetry.api.trace.Span", "io.opentelemetry.api.trace.SpanContext")
-            .methods()
-            .weak()
-            .build());
-  }
 
   @BuildStep
   void registerBeans(BuildProducer<AdditionalBeanBuildItem> beans) {
