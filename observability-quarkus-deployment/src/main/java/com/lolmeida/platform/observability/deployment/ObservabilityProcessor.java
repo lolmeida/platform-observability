@@ -8,13 +8,10 @@ import io.quarkus.arc.deployment.AdditionalBeanBuildItem;
 import io.quarkus.builder.item.SimpleBuildItem;
 import io.quarkus.deployment.annotations.BuildProducer;
 import io.quarkus.deployment.annotations.BuildStep;
-import io.quarkus.deployment.builditem.ApplicationArchivesBuildItem;
 import io.quarkus.deployment.builditem.FeatureBuildItem;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Properties;
+import io.quarkus.deployment.builditem.nativeimage.ReflectiveClassBuildItem;
+import org.eclipse.microprofile.config.Config;
+import org.eclipse.microprofile.config.ConfigProvider;
 
 public class ObservabilityProcessor {
   private static final String FEATURE = "platform-observability";
@@ -25,11 +22,13 @@ public class ObservabilityProcessor {
   }
 
   @BuildStep
-  ValidationBuildItem validateConfiguration(ApplicationArchivesBuildItem archives) {
-    Path applicationProperties = archives.getRootArchive().getChildPath("application.properties");
-    Properties properties = loadApplicationProperties(applicationProperties);
-    if (Boolean.parseBoolean(properties.getProperty("peah.observability.enabled", "false"))
-        && properties.getProperty("peah.observability.service", "").isBlank()) {
+  ValidationBuildItem validateConfiguration() {
+    Config config = ConfigProvider.getConfig();
+    if (config.getOptionalValue("peah.observability.enabled", Boolean.class).orElse(false)
+        && config
+            .getOptionalValue("peah.observability.service", String.class)
+            .orElse("")
+            .isBlank()) {
       throw new IllegalStateException(
           "peah.observability.service must be configured when observability is enabled");
     }
@@ -38,16 +37,14 @@ public class ObservabilityProcessor {
 
   static final class ValidationBuildItem extends SimpleBuildItem {}
 
-  private static Properties loadApplicationProperties(Path path) {
-    Properties properties = new Properties();
-    if (path == null || !Files.isRegularFile(path)) return properties;
-    try (InputStream input = Files.newInputStream(path)) {
-      properties.load(input);
-      return properties;
-    } catch (IOException exception) {
-      throw new IllegalStateException(
-          "Unable to read application.properties for observability validation", exception);
-    }
+  @BuildStep
+  void registerTraceContextReflection(BuildProducer<ReflectiveClassBuildItem> reflection) {
+    reflection.produce(
+        ReflectiveClassBuildItem.builder(
+                "io.opentelemetry.api.trace.Span", "io.opentelemetry.api.trace.SpanContext")
+            .methods()
+            .weak()
+            .build());
   }
 
   @BuildStep
