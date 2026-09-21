@@ -2,6 +2,10 @@
 
 Reusable Quarkus extensions for cross-cutting technical concerns. The first extension provides request correlation and sanitized structured HTTP events; it does not own domain rules, infrastructure, exporters, registries, secrets, Keycloak, databases or URLs.
 
+## Documentation
+
+Use the [documentation index](docs/README.md) for consumer setup, migration and extension-maintainer guidance.
+
 ## Modules
 
 - `observability-contract`: v1 schema, examples and data policy; no Quarkus dependency.
